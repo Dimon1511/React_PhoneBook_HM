@@ -4,6 +4,11 @@ import styles from "./App.module.css";
 import ContactForm from "./components/ContactForm/ContactForm";
 import Filter from "./components/Filter/Filter";
 import ContactList from "./components/ContactList/ContactList";
+import {
+  getAllContactsService,
+  createContactService,
+  deleteContactService,
+} from "./services/contactsService";
 
 function initTask() {
   const contacts = localStorage.getItem("contacts");
@@ -18,10 +23,25 @@ function App() {
   const [contacts, setContacts] = useState(initTask);
   const [filter, setFilter] = useState("");
 
+  function createContact(name, number) {
+    createContactService({
+      name,
+      number,
+    }).then((newContact) => {
+      setContacts((prev) => [...prev, newContact]);
+    });
+  }
+
   useEffect(() => {
     localStorage.setItem("contacts", JSON.stringify(contacts));
   }),
     [contacts];
+
+  useEffect(() => {
+    getAllContactsService().then((data) => {
+      setContacts(data);
+    });
+  }, []);
 
   function addContact(name, number) {
     const newContact = {
@@ -43,10 +63,14 @@ function App() {
     console.log(newContact);
   }
 
-  function deleteContact(id) {
-    setContacts((prevContacts) =>
-      prevContacts.filter((contact) => contact.id !== id)
-    );
+  function deleteContact(contactId) {
+    deleteContactService(contactId).then(() => {
+      setContacts((prev) =>
+        prev.filter((contact) => {
+          return contact.id !== contactId;
+        })
+      );
+    });
   }
 
   function checkContact(name) {
@@ -68,7 +92,7 @@ function App() {
   return (
     <div className={styles.container}>
       <h2>Phonebook</h2>
-      <ContactForm onAddContact={addContact} />
+      <ContactForm onAddContact={createContact} />
       <h2>Contacts</h2>
       <div className={styles.contactsSection}>
         <Filter onFilterChange={setFilter} filterValue={filter} />
