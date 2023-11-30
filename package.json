@@ -11,12 +11,14 @@
     "db": "json-server db.json --delay=250 --watch"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.7",
     "axios": "^1.5.1",
     "framer-motion": "^10.16.4",
     "json-server": "^0.17.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-loader-spinner": "^5.4.5"
+    "react-loader-spinner": "^5.4.5",
+    "react-redux": "^8.1.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",
